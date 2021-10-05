@@ -15,6 +15,9 @@ public interface ContactsDao {
     @Query("select * from notification_list")
     public List<Contacts> getContacts();
 
+    @Query("select * from notification_list where id = :id")
+    public Contacts getById(int id);
+
     @Update
     public void update(Contacts contacts);
 

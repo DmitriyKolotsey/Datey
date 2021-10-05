@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dkolotsey.datey.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -37,6 +38,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
         viewHolder.tvName.setText(contacts.getName());
         viewHolder.tvBirthdayDate.setText(contacts.getBirthdayDate());
         //viewHolder.tvDaysBeforeBirthday.setText(contacts.getBirthdayDate() - currentDate);
+        Picasso.get().load(contacts.getImgPath()).into(viewHolder.ivContactImage);
         //viewHolder.ivContactImage.setImageURI(contacts.getImgPath());
 
     }
