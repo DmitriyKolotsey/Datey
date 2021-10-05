@@ -40,17 +40,19 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="15dp"
                 android:ems="10"
+                android:hint="@string/hint_name"
                 android:inputType="textPersonName"
-                android:hint="@string/hint_name" />
+                android:minHeight="48dp" />
 
             <EditText
-                android:id="@+id/etBirtdayDate"
+                android:id="@+id/etBirthdayDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:ems="10"
+                android:hint="@string/hint_date"
                 android:inputType="date"
-                android:hint="@string/hint_date"/>
+                android:minHeight="48dp" />
         </LinearLayout>
 
     </LinearLayout>
@@ -66,14 +68,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Button" />
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="onCancel"
+            android:text="@string/cancel" />
 
         <Button
             android:id="@+id/bAccept"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Button" />
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="onAddData"
+            android:text="@string/OK" />
     </LinearLayout>
 
 
