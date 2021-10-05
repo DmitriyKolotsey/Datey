@@ -1,48 +1,66 @@
 package com.dkolotsey.datey;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
+import androidx.room.Room;
 
+import android.provider.ContactsContract;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
-public class AddDataFragment extends DialogFragment {
+import com.dkolotsey.datey.Data.Contacts;
+import com.dkolotsey.datey.Data.Database;
 
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    private String mParam1;
-    private String mParam2;
-
-    public AddDataFragment() {
-        // Required empty public constructor
-    }
-
-    public static AddDataFragment newInstance(String param1, String param2) {
-        AddDataFragment fragment = new AddDataFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
+public class AddDataFragment extends DialogFragment implements View.OnClickListener {
+    EditText etName, etBirthdayDate;
+    private static int RESULT_LOAD_IMAGE = 1;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_add_data, container, false);
+
+
+        getDialog().setTitle("Add Data");
+        View v = inflater.inflate(R.layout.fragment_add_data, null);
+        etName = v.findViewById(R.id.etName);
+        etBirthdayDate = v.findViewById(R.id.etBirthdayDate);
+
+        v.findViewById(R.id.bAccept).setOnClickListener(this);
+        v.findViewById(R.id.bCancel).setOnClickListener(this);
+        v.findViewById(R.id.ibContactImage).setOnClickListener(this);
+        return v;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.bAccept:
+                Contacts contacts = new Contacts();
+
+                //int id = ;
+                //String path = ;
+                String name = etName.getText().toString();
+                String birthday_date = etBirthdayDate.getText().toString();
+
+                //contacts.setId(id);
+                //contacts.setImgPath(path);
+                contacts.setName(name);
+                contacts.setBirthdayDate(birthday_date);
+
+                MainActivity.database.contactsDao().addData(contacts);
+                break;
+            case R.id.bCancel:
+                getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
+                break;
+            case R.id.ibContactImage:
+
+                break;
+        }
     }
 }

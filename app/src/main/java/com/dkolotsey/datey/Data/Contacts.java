@@ -19,13 +19,6 @@ public class Contacts {
     @ColumnInfo(name = "birthday_date")
     private String birthdayDate;
 
-    public Contacts(int id, String imgPath, String name, String birthdayDate) {
-        this.id = id;
-        this.imgPath = imgPath;
-        this.name = name;
-        this.birthdayDate = birthdayDate;
-    }
-
     public int getId() {
         return id;
     }
