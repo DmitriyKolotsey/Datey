@@ -1,9 +1,11 @@
 package com.dkolotsey.datey.Data;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,9 +21,12 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
     LayoutInflater inflater;
     List<Contacts> contactsList;
 
-    public Adapter(Context context, List<Contacts> contactsList) {
+    public AdapterListener onClickListener;
+
+    public Adapter(Context context, List<Contacts> contactsList, AdapterListener listener) {
         this.inflater = LayoutInflater.from(context);
         this.contactsList = contactsList;
+        this.onClickListener = listener;
     }
 
     @NonNull
@@ -39,7 +44,11 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
         viewHolder.tvBirthdayDate.setText(contacts.getBirthdayDate());
         //viewHolder.tvDaysBeforeBirthday.setText(contacts.getBirthdayDate() - currentDate);
         Picasso.get().load(contacts.getImgPath()).into(viewHolder.ivContactImage);
-        //viewHolder.ivContactImage.setImageURI(contacts.getImgPath());
+        if (Uri.parse(contacts.getImgPath()) != null){
+            viewHolder.ivContactImage.setImageURI(Uri.parse(contacts.getImgPath()));
+        } else {
+            //viewHolder.ivContactImage.setImageDrawable(R.drawable.);
+        }
 
     }
 
@@ -48,15 +57,39 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
         return contactsList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder{
             private TextView tvName, tvBirthdayDate, tvDaysBeforeBirthday;
             private ImageView ivContactImage;
+            private ImageButton ibEdit, ibDelete;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+
             tvName = (TextView) itemView.findViewById(R.id.tvName);
             tvBirthdayDate = (TextView) itemView.findViewById(R.id.tvBirthdayDate);
             tvDaysBeforeBirthday = (TextView) itemView.findViewById(R.id.tvDaysBeforeBirthday);
             ivContactImage = (ImageView) itemView.findViewById(R.id.ivContactImage);
+            ibEdit = (ImageButton) itemView.findViewById(R.id.ibEdit);
+            ibDelete = (ImageButton) itemView.findViewById(R.id.ibDelete);
+
+            ibEdit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onClickListener.editButtonOnClick(v, getAdapterPosition());
+                }
+            });
+
+            ibDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onClickListener.deleteButtonOnClick(v, getAdapterPosition());
+                }
+            });
+
         }
+    }
+
+    public interface AdapterListener{
+        void editButtonOnClick(View v, int position);
+        void deleteButtonOnClick(View v, int position);
     }
 }

@@ -2,30 +2,20 @@ package com.dkolotsey.datey;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-import androidx.room.Room;
 
-import android.provider.ContactsContract;
-import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.dkolotsey.datey.Data.Adapter;
 import com.dkolotsey.datey.Data.Contacts;
-import com.dkolotsey.datey.Data.Database;
 import com.squareup.picasso.Picasso;
-
-import java.io.FileNotFoundException;
-import java.util.List;
 
 public class AddDataFragment extends DialogFragment implements View.OnClickListener {
     EditText etName, etBirthdayDate;
@@ -57,10 +47,11 @@ public class AddDataFragment extends DialogFragment implements View.OnClickListe
             case R.id.bAccept:
                 Contacts contacts = new Contacts();
 
-                int id;
-                if ( == 0){
+                int id = this.getArguments().getInt("id");
+
+                if ( id == 0){
                      id = 0;
-                } else id = + 1;
+                } else id = id + 1;
 
                 String path = imgUri.toString();
                 String name = etName.getText().toString();

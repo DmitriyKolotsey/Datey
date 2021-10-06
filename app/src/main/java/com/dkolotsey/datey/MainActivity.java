@@ -9,8 +9,6 @@ import androidx.room.Room;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
 
 import com.dkolotsey.datey.Data.Adapter;
 import com.dkolotsey.datey.Data.Contacts;
@@ -18,13 +16,15 @@ import com.dkolotsey.datey.Data.Database;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity{
     public static Database database;
     DialogFragment addDataFragment = new AddDataFragment();
     DialogFragment editDataFragment = new EditDataFragment();
     DialogFragment deleteDataFragment = new DeleteDataFragment();
 
     RecyclerView recyclerView;
+
+    List<Contacts> contactsListGetSize;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,23 +36,48 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        findViewById(R.id.ibEdit).setOnClickListener(this);
-        findViewById(R.id.ibDelete).setOnClickListener(this);
+        getData();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
 
         getData();
     }
 
     public void getData(){
         class GetData extends AsyncTask<Void, Void, List<Contacts>>{
+            List<Contacts> contactsList;
             @Override
             protected List<Contacts> doInBackground(Void... voids) {
-                List<Contacts> contactsList = MainActivity.database.contactsDao().getContacts();
+                contactsList = MainActivity.database.contactsDao().getContacts();
+                contactsListGetSize = contactsList;
                 return contactsList;
             }
 
             @Override
             protected void onPostExecute(List<Contacts> contacts) {
-                Adapter adapter = new Adapter(getApplicationContext(), contacts);
+                Adapter adapter = new Adapter(getApplicationContext(), contacts, new Adapter.AdapterListener() {
+                    @Override
+                    public void editButtonOnClick(View v, int position) {
+                        int id = contactsList.size();
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("id", id);
+                        editDataFragment.setArguments(bundle);
+                        editDataFragment.show(getSupportFragmentManager(), "addDataFragment");
+                    }
+
+                    @Override
+                    public void deleteButtonOnClick(View v, int position) {
+                        int id = contactsList.size();
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("id", id);
+                        deleteDataFragment.setArguments(bundle);
+                        deleteDataFragment.show(getSupportFragmentManager(), "addDataFragment");
+
+                    }
+                });
                 recyclerView.setAdapter(adapter);
                 super.onPostExecute(contacts);
             }
@@ -62,18 +87,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void onAddDataFragment(View view) {
+        int id = contactsListGetSize.size();
+        Bundle bundle = new Bundle();
+        bundle.putInt("id", id);
+        deleteDataFragment.setArguments(bundle);
         addDataFragment.show(getSupportFragmentManager(), "addDataFragment");
-    }
-
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()){
-            case R.id.ibEdit:
-                editDataFragment.show(getSupportFragmentManager(), "editDataFragment");
-                break;
-            case R.id.ibDelete:
-                deleteDataFragment.show(getSupportFragmentManager(), "deleteDataFragment");
-                break;
-        }
     }
 }
